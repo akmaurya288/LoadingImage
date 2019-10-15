@@ -66,6 +66,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Code to show image" />
+
+            <ImageView
+                android:id="@+id/imageView_Code_Local"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                fresco:srcCompat="@drawable/ic_launcher_foreground" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Code Load Image From Local Storage" />
         </LinearLayout>
     </ScrollView>
 

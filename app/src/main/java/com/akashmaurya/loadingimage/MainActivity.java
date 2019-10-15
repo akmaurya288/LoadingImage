@@ -1,7 +1,10 @@
 package com.akashmaurya.loadingimage;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -14,31 +17,35 @@ import com.bumptech.glide.Glide;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.io.File;
 import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageView imageView;
+    ImageView imageView_glide;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
         setContentView(R.layout.activity_main);
 
-        imageView = findViewById(R.id.imageView_Glidenet);
+        imageView_glide = findViewById(R.id.imageView_Glidenet);
 
         netImageWithGlide();
+
         netImageWithFresco();
 
+        showImageFromLocalStorage();
+
         new showImageFromNet((ImageView) findViewById(R.id.imageView_Code))
-                .execute("https://www.gstatic.com/webp/gallery/4.jpg");
+                .execute("https://www.gstatic.com/webp/gallery/2.jpg");
     }
 
     public void netImageWithGlide(){
         Glide.with(this)
                 .load("https://www.gstatic.com/webp/gallery/3.webp")
                 .override(800,600)
-                .into(imageView);
+                .into(imageView_glide);
     }
 
     public void netImageWithFresco(){
@@ -71,5 +78,16 @@ public class MainActivity extends AppCompatActivity {
             imageView.setImageBitmap(result);
         }
     }
+    private void showImageFromLocalStorage(){
+        File imgFile = new  File("/sdcard/images.jpeg");
+        if(imgFile.exists()){
 
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+
+            ImageView imageView = findViewById(R.id.imageView_Code_Local);
+
+            imageView.setImageBitmap(myBitmap);
+
+        };
+    }
 }
