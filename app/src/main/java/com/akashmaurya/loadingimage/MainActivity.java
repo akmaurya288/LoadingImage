@@ -59,11 +59,10 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        if (result == PackageManager.PERMISSION_GRANTED) {
+        if (result == PackageManager.PERMISSION_GRANTED)
             return true;
-        } else {
+        else
             return false;
-        }
     }
 
     private void requestPermission() {
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -96,14 +95,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void netImageWithFresco(){
         Uri imageUri = Uri.parse("https://www.gstatic.com/webp/gallery/1.webp");
-        SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.sdvImage);
+        SimpleDraweeView draweeView = findViewById(R.id.sdvImage);
         draweeView.setImageURI(imageUri);
     }
 
-    private class showImageFromNet extends AsyncTask<String, Void, Bitmap> {
+    private static class showImageFromNet extends AsyncTask<String, Void, Bitmap> {
         ImageView imageView;
 
-        public showImageFromNet(ImageView imageView) {
+        showImageFromNet(ImageView imageView) {
             this.imageView = imageView;
         }
 
@@ -135,14 +134,14 @@ public class MainActivity extends AppCompatActivity {
 
             imageView.setImageBitmap(myBitmap);
 
-        };
+        }
     }
 
     private String getImagesPath(Activity activity) {
         Uri uri;
         Cursor cursor;
-        ArrayList<String> listOfAllImages = new ArrayList<String>();
-        String absolutePathOfImage = null;
+        ArrayList<String> listOfAllImages = new ArrayList<>();
+        String absolutePathOfImage;
         uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
         String[] projection = { MediaStore.MediaColumns.DATA };
@@ -155,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
             listOfAllImages.add(absolutePathOfImage);
         }
-
+        cursor.close();
         return listOfAllImages.get(0);
     }
 }
