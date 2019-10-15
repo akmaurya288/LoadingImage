@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -26,6 +27,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -125,19 +127,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showImageFromLocalStorage(){
-        File imgFile = new  File(getImagesPath(this));
-        if(imgFile.exists()){
+        ArrayList<String> imageList = getImagesPath(this);
+        String path = "";
+        if(imageList.size()!=0){
+            path = imageList.get(0);
+        File imgFile = new  File(path);
+        if(imgFile.exists()) {
 
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
 
             ImageView imageView = findViewById(R.id.imageView_Code_Local);
 
             imageView.setImageBitmap(myBitmap);
-
+        }
+        }else {
+            TextView textView = findViewById(R.id.textView5);
+            textView.setText("Could not find any image in Local Storage");
         }
     }
 
-    private String getImagesPath(Activity activity) {
+    private ArrayList<String> getImagesPath(Activity activity) {
         Uri uri;
         Cursor cursor;
         ArrayList<String> listOfAllImages = new ArrayList<>();
@@ -148,13 +157,13 @@ public class MainActivity extends AppCompatActivity {
 
         cursor = activity.getContentResolver().query(uri, projection, null,
                 null, null);
-
+        if(cursor!=null)
         while (cursor.moveToNext()) {
             absolutePathOfImage = cursor.getString(0);
 
             listOfAllImages.add(absolutePathOfImage);
         }
         cursor.close();
-        return listOfAllImages.get(0);
+        return listOfAllImages;
     }
 }
