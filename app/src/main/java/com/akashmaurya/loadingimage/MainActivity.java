@@ -1,12 +1,15 @@
 package com.akashmaurya.loadingimage;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +22,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         netImageWithFresco();
 
         showImageFromLocalStorage();
+
 
         new showImageFromNet((ImageView) findViewById(R.id.imageView_Code))
                 .execute("https://www.gstatic.com/webp/gallery/2.jpg");
@@ -78,8 +83,9 @@ public class MainActivity extends AppCompatActivity {
             imageView.setImageBitmap(result);
         }
     }
+
     private void showImageFromLocalStorage(){
-        File imgFile = new  File("/sdcard/images.jpeg");
+        File imgFile = new  File(getImagesPath(this));
         if(imgFile.exists()){
 
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
@@ -89,5 +95,26 @@ public class MainActivity extends AppCompatActivity {
             imageView.setImageBitmap(myBitmap);
 
         };
+    }
+
+    private String getImagesPath(Activity activity) {
+        Uri uri;
+        Cursor cursor;
+        ArrayList<String> listOfAllImages = new ArrayList<String>();
+        String absolutePathOfImage = null;
+        uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+
+        String[] projection = { MediaStore.MediaColumns.DATA };
+
+        cursor = activity.getContentResolver().query(uri, projection, null,
+                null, null);
+
+        while (cursor.moveToNext()) {
+            absolutePathOfImage = cursor.getString(0);
+
+            listOfAllImages.add(absolutePathOfImage);
+        }
+
+        return listOfAllImages.get(0);
     }
 }
